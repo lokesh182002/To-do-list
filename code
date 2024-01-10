@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: black;
+            color: white;
+        }
+
+        #task-input {
+            padding: 8px;
+        }
+
+        #due-time {
+            padding: 8px;
+        }
+
+        #priority {
+            padding: 8px;
+        }
+
+        #task-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid #ddd;
+            margin: 5px 0;
+            background-color: #333; /* Default color for new tasks */
+        }
+
+        .in-progress {
+            background-color: #ffa500; /* Orange color for in-progress tasks */
+        }
+
+        .completed {
+            background-color: #008000; /* Green color for completed tasks */
+        }
+
+        .task-text {
+            flex-grow: 1; /* Allow task text to expand and take available space */
+        }
+
+        .completed-text {
+            text-decoration: line-through;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<h1>To-Do List</h1>
+
+<input type="text" id="task-input" placeholder="Add a new task">
+<input type="time" id="due-time">
+<select id="priority">
+    <option value="low">Low</option>
+    <option value="medium">Medium</option>
+    <option value="high">High</option>
+</select>
+<button onclick="addTask()">Add Task</button>
+
+<ul id="task-list"></ul>
+
+<script>
+    function addTask() {
+        const taskInput = document.getElementById("task-input");
+        const dueTimeInput = document.getElementById("due-time");
+        const priorityInput = document.getElementById("priority");
+        const taskList = document.getElementById("task-list");
+
+        if (taskInput.value.trim() === "") {
+            alert("Please enter a task");
+            return;
+        }
+
+        const taskItem = document.createElement("li");
+        taskItem.className = "task-item";
+
+        const taskText = document.createElement("span");
+        taskText.className = "task-text";
+        taskText.textContent = taskInput.value + ' (Due Time: ' + dueTimeInput.value + ', Priority: ' + priorityInput.value + ')';
+        taskItem.appendChild(taskText);
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.onclick = function() {
+            taskItem.remove();
+        };
+        taskItem.appendChild(deleteButton);
+
+        const completeButton = document.createElement("button");
+        completeButton.textContent = "Complete";
+        completeButton.onclick = function() {
+            toggleTaskStatus(taskItem, taskText);
+        };
+        taskItem.appendChild(completeButton);
+
+        taskList.appendChild(taskItem);
+
+        // Set a timeout to check due time and mark as completed
+        setTimeout(() => checkDueTime(taskItem, taskText, dueTimeInput.value), calculateDueTime(dueTimeInput.value));
+
+        // Clear the input fields
+        taskInput.value = "";
+        dueTimeInput.value = "";
+        priorityInput.value = "low";
+    }
+
+    function checkDueTime(taskItem, taskText, dueTime) {
+        const currentTime = new Date();
+        const dueTimeArray = dueTime.split(":");
+        const dueDate = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), dueTimeArray[0], dueTimeArray[1]);
+
+        if (currentTime > dueDate) {
+            toggleTaskStatus(taskItem, taskText);
+        }
+    }
+
+    function calculateDueTime(dueTime) {
+        const currentTime = new Date();
+        const dueTimeArray = dueTime.split(":");
+        const dueDate = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), dueTimeArray[0], dueTimeArray[1]);
+
+        return dueDate - currentTime;
+    }
+
+    function toggleTaskStatus(taskItem, taskText) {
+        if (taskText.classList.contains("completed-text")) {
+            taskItem.classList.remove("completed");
+            taskText.classList.remove("completed-text");
+        } else {
+            taskItem.classList.add("completed");
+            taskText.classList.add("completed-text");
+        }
+    }
+</script>
+
+</body>
+</html>
