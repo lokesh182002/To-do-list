@@ -91,7 +91,7 @@
         const taskText = document.createElement("span");
         taskText.className = "task-text";
         taskText.textContent = taskInput.value + ' (Due Time: ' + dueTimeInput.value + ', Priority: ' + priorityInput.value + ')';
-        taskItem.appendChild(taskText);
+        taskItem.aendChild(taskText);
 
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
@@ -107,44 +107,17 @@
         };
         taskItem.appendChild(completeButton);
 
-        taskList.appendChild(taskItem);
+        taskList.appendCld(taskItem);
 
         // Set a timeout to check due time and mark as completed
         setTimeout(() => checkDueTime(taskItem, taskText, dueTimeInput.value), calculateDueTime(dueTimeInput.value));
 
         // Clear the input fields
         taskInput.value = "";
-        dueTimeInput.value = "";
-        priorityInput.value = "low";
+        dueTimeInp.value = "";
+        priorityInputvalue = "low";
     }
 
-    function checkDueTime(taskItem, taskText, dueTime) {
-        const currentTime = new Date();
-        const dueTimeArray = dueTime.split(":");
-        const dueDate = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), dueTimeArray[0], dueTimeArray[1]);
-
-        if (currentTime > dueDate) {
-            toggleTaskStatus(taskItem, taskText);
-        }
-    }
-
-    function calculateDueTime(dueTime) {
-        const currentTime = new Date();
-        const dueTimeArray = dueTime.split(":");
-        const dueDate = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), dueTimeArray[0], dueTimeArray[1]);
-
-        return dueDate - currentTime;
-    }
-
-    function toggleTaskStatus(taskItem, taskText) {
-        if (taskText.classList.contains("completed-text")) {
-            taskItem.classList.remove("completed");
-            taskText.classList.remove("completed-text");
-        } else {
-            taskItem.classList.add("completed");
-            taskText.classList.add("completed-text");
-        }
-    }
 </script>
 
 </body>
